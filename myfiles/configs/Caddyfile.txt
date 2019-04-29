@@ -1,0 +1,52 @@
+http://patrologia.tk:2015 {
+
+redir 302 {
+  if {path} is /
+  / /api/index.html
+  
+}
+
+}
+
+
+
+
+http://pcloud.graeca.tk:2015 , http://80.240.31.88:2015 {
+
+
+browse
+
+filemanager
+
+}
+
+
+http://patrologia.graeca.tk:2015, http://www.graeca.tk:2015, http://graeca.tk:2015 {
+
+
+#browse
+
+redir 302 {
+  if {path} is /
+  / /patrologia/migne/index.html
+  
+}
+
+
+
+#basicauth / ain ainain
+
+cgi {
+match  /*.sh /patrologia/*.sh /patrologia/migne/*.sh
+exec /bin/sh /srv{match}
+
+}
+
+markdown / {
+ext .md
+}
+
+filemanager /docs /docs
+ 
+}
+
