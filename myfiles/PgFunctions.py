@@ -11,6 +11,52 @@ import glob, os
 import re
 from pathlib import Path
 
+
+def createPadding(img, margin):
+    w=img.shape[1]
+    #print(w)
+    for i in range(10):
+        img = np.insert(img, w, values=255, axis=1)
+
+    for i in range(10):
+        img = np.insert(img, 0, values=255, axis=1)    
+    
+    h=img.shape[0]
+    #print(w)
+    for i in range(10):
+        img = np.insert(img, h, values=255, axis=0)
+    
+    for i in range(10):
+        img = np.insert(img, 0, values=255, axis=0)
+    
+    
+    return img
+    
+    
+    
+def createPadding2(query, margin):
+    #size=np.size(query)
+    #query = np.insert(query, w, values=0, axis=1)
+    #create horizontal space
+    w=query.shape[0]
+    x=np.zeros(shape=(w, margin))
+    x.fill(255)
+    #x.astype(int)
+    query = np.hstack((query, x))
+    query = np.hstack((x,query))
+    
+    
+    h=query.shape[1]
+    y=np.zeros(shape=(margin, h))
+    y.fill(255)
+    query = np.vstack((query, y))
+    query = np.vstack((y,query))
+
+    return query
+
+
+
+
 def clearBorder(img):
     
 
@@ -104,14 +150,17 @@ def cutPunctuation(img,wordname_path):
             #print('half',half)
             #print('xc',xc)
             hprof=imgT.sum(axis=1)
+            sumakiarea=hprof.sum()
             hprofIndex=np.where(hprof == 0)
             hprofZerosNum=np.size(hprofIndex,1)
             
             #print('zeros',hprofZerosNum)
             
             #print('==========')
-            if hprofZerosNum-3 >= half:
-                #do not cut
+            #if hprofZerosNum-3 >= half:
+            if sumakiarea <=90: 
+                
+                #cut
                 
                 imgF=255*imgF
                 imgF=abs(255-imgF)
@@ -121,7 +170,7 @@ def cutPunctuation(img,wordname_path):
                 #plt.imshow(imgF)
                 return imgReturn
             else:
-                #cut
+                #do not cut
                 img=255*img
                 img=abs(255-img)
                 imgReturn=img
@@ -189,10 +238,16 @@ def checkDiacritics(img):
        return False #if there is not diacritics
     else:
        return True
+   
+def applyCircleErosion(word_img):
+    word_img=createPadding(word_img, 20) 
+    kernel=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9))
+    erode_img = cv2.erode(word_img, kernel, iterations=1)
+    return erode_img
 
-def applyCircleErosion(word):
+def applyCircleErosion2(word_img):
     colorvalue = [0, 0, 0]
-    enlarge_img= cv2.copyMakeBorder(word,10,10,10,10,cv2.BORDER_REPLICATE,value=colorvalue)
+    enlarge_img= cv2.copyMakeBorder(word_img,10,10,10,10,cv2.BORDER_REPLICATE,value=colorvalue)
     kernel=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9))
     erode_img = cv2.erode(enlarge_img, kernel, iterations=1)
     return erode_img
@@ -328,8 +383,10 @@ def searchData(query,folder):
     
     page=[]
     
-     
+    #query=createPadding(query, 20) 
     erodeimg=applyCircleErosion(query)
+    
+    
     #Get the contour of query image
     _, QueryContours, _ = cv2.findContours(erodeimg, cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE) 
     #queryContour=cv2.drawContours(query, contours, 1, (0,255,0), 1)    
@@ -340,6 +397,7 @@ def searchData(query,folder):
         #print(Path(filename))
         data = cv2.imread(filename,0)
         #Apply erosion to image file
+        #data=createPadding(data, 20)
         erodedata=applyCircleErosion(data)
         #Get the contour of image file
         _, DataContours, _ = cv2.findContours(erodedata, cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE) 
@@ -365,7 +423,7 @@ def searchData(query,folder):
                     print(area)
                     print(filename)
                 
-                if abc<0.05:
+                if abc<0.06:
                     count=count+1
                     #plt.figure()
                     #plt.imshow(erodedata)

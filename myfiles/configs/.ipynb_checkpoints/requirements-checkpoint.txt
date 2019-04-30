@@ -1,0 +1,5 @@
+scipy
+fastdtw
+dtw
+matplotlib
+opencv-contrib-python==3.4.5.20
