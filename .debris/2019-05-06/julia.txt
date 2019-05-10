@@ -4,8 +4,3 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.1/julia-1.1.0-linux-x86_
 tar xvfa julia-1.1.0-linux-x86_64.tar.gz
 ls -l julia-1.1.0/bin/
 echo PATH=\$PATH:~/julia-1.1.0/bin/ >> ~/.profile
-source ~/.profile
-
-mkdir -p ~/.julia/config/
-echo "using Pkg" >> ~/.julia/config/startup.jl
-nohup jupyter-lab --allow-root --notebook-dir=pg-ocr/ &
