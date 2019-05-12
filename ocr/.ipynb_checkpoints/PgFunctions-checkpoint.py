@@ -11,6 +11,32 @@ import glob, os
 import re
 from pathlib import Path
 
+
+def createPadding(img, margin):
+    w=img.shape[1]
+    #print(w)
+    for i in range(10):
+        img = np.insert(img, w, values=255, axis=1)
+
+    for i in range(10):
+        img = np.insert(img, 0, values=255, axis=1)    
+    
+    h=img.shape[0]
+    #print(w)
+    for i in range(10):
+        img = np.insert(img, h, values=255, axis=0)
+    
+    for i in range(10):
+        img = np.insert(img, 0, values=255, axis=0)
+    
+    
+    return img
+    
+    
+    
+
+
+
 def clearBorder(img):
     
 
@@ -104,14 +130,17 @@ def cutPunctuation(img,wordname_path):
             #print('half',half)
             #print('xc',xc)
             hprof=imgT.sum(axis=1)
+            sumakiarea=hprof.sum()
             hprofIndex=np.where(hprof == 0)
             hprofZerosNum=np.size(hprofIndex,1)
             
             #print('zeros',hprofZerosNum)
             
             #print('==========')
-            if hprofZerosNum-3 >= half:
-                #do not cut
+            #if hprofZerosNum-3 >= half:
+            if sumakiarea <=90: 
+                
+                #cut
                 
                 imgF=255*imgF
                 imgF=abs(255-imgF)
@@ -121,7 +150,7 @@ def cutPunctuation(img,wordname_path):
                 #plt.imshow(imgF)
                 return imgReturn
             else:
-                #cut
+                #do not cut
                 img=255*img
                 img=abs(255-img)
                 imgReturn=img
@@ -135,67 +164,14 @@ def cutPunctuation(img,wordname_path):
 
 
 
-def checkDiacritics(img):
-    import numpy as np
-    import cv2 as cv2
-    from matplotlib import pyplot as plt
-    from scipy.interpolate import interp1d
-    
-    img = cv2.bitwise_not(img)
-    #print(img)
-    newX=256
-    newY=256
-    #img = cv2.resize(img,(int(newX),int(newY)))
-    img=img/255
-    y=img.sum(axis=1)
 
-
-
-    #num=np.size(img,0)
-    step=0.1
-    height=np.size(img,0)
-    width=np.size(img,1)
-    x_data = np.arange(height)/height
-    x_interp = np.arange(1,height-1,step)/height
-    
-    
-    x_data=x_data[::-1]
-    x_interp=x_interp[::-1]
-    #print(y.shape)
-    #print(width)
-    #print(height)
-
-
-    f2 = interp1d(x_data, y, kind='cubic')
-    
-    
-    sumf=0
-    for x in x_interp:
-        if x>0.75: #near the first minima
-          sumf=sumf + (f2(x)*step/(height*width))
-          # print(x,f2(x))
-          
-        
-    #print(sumf)
-
-    #########plt.plot(y/width, x_data, 'o', f2(x_interp)/width, x_interp, '+')
-    #plt.plot(y/width, x_data, 'o')
-    #########plt.figure()
-    #########plt.imshow(img)
-    
-    sumf=sumf*1000
-    
-    if sumf>50:
-       return False #if there is not diacritics
-    else:
-       return True
-
-def applyCircleErosion(word):
-    colorvalue = [0, 0, 0]
-    enlarge_img= cv2.copyMakeBorder(word,10,10,10,10,cv2.BORDER_REPLICATE,value=colorvalue)
+def applyCircleErosion(word_img):
+    word_img=createPadding(word_img, 20) 
     kernel=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9))
-    erode_img = cv2.erode(enlarge_img, kernel, iterations=1)
+    erode_img = cv2.erode(word_img, kernel, iterations=1)
     return erode_img
+
+
 
 def applyHorizontalErosion(source_img):
     kernel = np.ones((1,9), np.uint8)
@@ -328,8 +304,10 @@ def searchData(query,folder):
     
     page=[]
     
-     
+    #query=createPadding(query, 20) 
     erodeimg=applyCircleErosion(query)
+    
+    
     #Get the contour of query image
     _, QueryContours, _ = cv2.findContours(erodeimg, cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE) 
     #queryContour=cv2.drawContours(query, contours, 1, (0,255,0), 1)    
@@ -339,7 +317,10 @@ def searchData(query,folder):
          
         #print(Path(filename))
         data = cv2.imread(filename,0)
+        if data is None:
+            continue
         #Apply erosion to image file
+        #data=createPadding(data, 20)
         erodedata=applyCircleErosion(data)
         #Get the contour of image file
         _, DataContours, _ = cv2.findContours(erodedata, cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE) 
@@ -365,7 +346,7 @@ def searchData(query,folder):
                     print(area)
                     print(filename)
                 
-                if abc<0.05:
+                if abc<0.06:
                     count=count+1
                     #plt.figure()
                     #plt.imshow(erodedata)
@@ -398,34 +379,6 @@ def searchData(query,folder):
      
     return page
   
-def createView():
-    import re
-    #f=open("results/results.html", "r")
-   # file_contents = f.read()
-   # print( file_contents)
-    
-    #str = "The rain in Spain"
-    #x = re.sub("\\", "/", file_contents)
-   # x = file_contents.replace('\\', '/')
-   # 
-   # f.close()
-   
-    f=open("results/results.html", "r")
-    content=''
-    for line in f.readlines():
-        print(line)
-        x = line.replace('\\', '/')
-        x = x.replace('\n', '')
-        #f.write(x)
-        print(x)
-        
-        #content=content+'<a href=../'+x+'>'+x+'</a><br>'+'\n'
-        content=content+'<a href=../'+x+'>'+x+'</a>'+'<img src=../'+x+'><br>'+'\n'
-        f.close()
-    print(content)
-    f=open("results/results2.html", "w")
-    f.write(content)
-    f.close()
 
 
     

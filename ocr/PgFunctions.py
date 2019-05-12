@@ -165,7 +165,6 @@ def cutPunctuation(img,wordname_path):
 
 
 
-   
 def applyCircleErosion(word_img):
     word_img=createPadding(word_img, 20) 
     kernel=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9))
