@@ -13,19 +13,3 @@ nohup jupyter-lab --allow-root --notebook-dir=pg-ocr/ &
 
 
 
-
-sudo apt-get update
-sudo dpkg -i "/root/megacmd.deb"
-sudo apt install -f
-mega-login evagelosvar@gmail.com marina12
-#python 3.73
-# pip install opencv-contrib-python==3.4.5.20
-conda install -c conda-forge jupyterlab
-apt-get update
-apt-get install -y libsm6 libxext6 libxrender-dev
-
-
-git add .
-git commit -m "update"
-git push https://github.com/graeca/pg-ocr.git master
-#nohup jupyter-lab --allow-root --notebook-dir=pg-ocr/ &

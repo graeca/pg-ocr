@@ -23,9 +23,3 @@ mega-login evagelosvar@gmail.com marina12
 conda install -c conda-forge jupyterlab
 apt-get update
 apt-get install -y libsm6 libxext6 libxrender-dev
-
-
-git add .
-git commit -m "update"
-git push https://github.com/graeca/pg-ocr.git master
-#nohup jupyter-lab --allow-root --notebook-dir=pg-ocr/ &
