@@ -140,7 +140,7 @@ for queryFile in wordtokens:
             results=compareHUandSC(queryFile, dataFile)
             #print(results)
             if "SC" in results:
-                if results["SC"]<0.06:
+                if results["SC"]<0.09:
                     wordlinks.append(results["PA"])
                     divB='<div style="'+'position: absolute;top: '+coords[0]+'px;left:'+coords[1]+'px;border: 3px solid red;position: absolute;">'
                     divE='</div>'
