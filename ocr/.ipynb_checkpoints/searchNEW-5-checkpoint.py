@@ -94,7 +94,7 @@ def compareHUandSC(queryFile, dataFile):
 
 
 queryFile= "word/kyrios.png"
-wordtokens = get_ipython().getoutput('find word -type f -name *.png| sed -n /ipynb/!p')
+wordtokens = get_ipython().getoutput("find word -type f -name '*.png'| sed -n /ipynb/!p")
 
 for queryFile in wordtokens:
     print(queryFile)
