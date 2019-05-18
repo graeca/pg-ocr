@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[15]:
 
 
 import cv2 as cv2  
 from matplotlib import pyplot as plt
 import numpy as np
 import re
-
+from  PgFunctions import *
 import shutil
 import glob, os
 
 get_ipython().run_line_magic('run', 'PgFunctions.py')
-from  PgFunctions import * 
 ip = get_ipython().getoutput('wget -qO - ipv4bot.whatismyipaddress.com')
 def compareHUandSC(queryFile, dataFile):
         
@@ -44,7 +43,7 @@ def compareHUandSC(queryFile, dataFile):
             #cut off the very disimilar images using HU moments for speeding the algorithm
             ret = cv2.matchShapes(QueryContours[1],DataContours[1],3,0.0)
             params["HU"]=ret
-            if ret<0.1:
+            if ret<0.3:
                 sd = cv2.createShapeContextDistanceExtractor()
                 try:
                     abc = sd.computeDistance(QueryContours[1],DataContours[1])
@@ -93,9 +92,9 @@ def compareHUandSC(queryFile, dataFile):
 
 
 
-queryFile= "word/kyrios.png"
-wordtokens = get_ipython().getoutput("find word -type f -name '*.png'| sed -n /ipynb/!p")
 
+wordtokens = get_ipython().getoutput("find word -type f -name '*.png'| sed -n /ipynb/!p")
+wordtokens= ["word/pneuma.png"]
 for queryFile in wordtokens:
     print(queryFile)
     
@@ -140,15 +139,17 @@ for queryFile in wordtokens:
             results=compareHUandSC(queryFile, dataFile)
             #print(results)
             if "SC" in results:
-                if results["SC"]<0.09:
+                if results["SC"]<0.1:
                     wordlinks.append(results["PA"])
                     divB='<div style="'+'position: absolute;top: '+coords[0]+'px;left:'+coords[1]+'px;border: 3px solid red;position: absolute;">'
                     divE='</div>'
                     imgtag=divB+'<img src="../'+ filename +'">'+divE
                     content=content+imgtag
                     f=results["PA"]
+                    print("=========")
                     print(results["PA"])
                     print(results["SC"])
+                    print(results["HU"])
 
 
                     #print(ip[0])
@@ -183,9 +184,19 @@ for queryFile in wordtokens:
 
     #create page with founded words
     queryHtml=queryFile+'.html'
+    queryTxt=queryFile+'.txt'
     get_ipython().system('rm {queryHtml}')
     get_ipython().system('echo > {queryHtml}')
-    print(wordlinks)    
+    print(wordlinks)
+    
+    with open(queryTxt, 'w') as f:
+        for item in wordlinks:
+            wordtag=str(item)
+            f.write("%s\n" % wordtag)
+    
+    
+    
+    
     with open(queryHtml, 'w') as f:
         for item in wordlinks:
             wordtag='<img src="../'+ str(item) +'">'
