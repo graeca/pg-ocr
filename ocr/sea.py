@@ -97,6 +97,7 @@ wordtokens = get_ipython().getoutput("find word -type f -name '*.png'| sed -n /i
 wordtokens= ["word/pneuma.png"]
 wordtokens= ["word/kyrios.png"]
 wordtokens= ["word/xristou.png","word/patera.png"]
+wordtokens= ["word/dauid.png","word/patros.png","word/pisteos.png","word/agion.png","word/pneumatos.png"]
 for queryFile in wordtokens:
     print(queryFile)
     
