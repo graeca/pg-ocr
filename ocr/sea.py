@@ -99,7 +99,7 @@ wordtokens= ["word/kyrios.png"]
 wordtokens= ["word/xristou.png","word/patera.png"]
 wordtokens= ["word/Ihsou.png","word/paulos.png","word/ypostateos.png","word/theos.png","word/oti.png","word/gar.png"]
 wordtokens= ['word/pantokrator.png','word/apavgazmatos.png','word/monogeni.png','word/agenitos.png']
-
+wordtokens= ['word/pantokratoros.png','word/korinthiois.png','word/exomologisetai.png','word/akatalhptos.png']
 for queryFile in wordtokens:
     print(queryFile)
     
