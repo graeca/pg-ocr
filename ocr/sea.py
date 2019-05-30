@@ -23,7 +23,7 @@ def compareHUandSC(queryFile, dataFile):
         _, QueryContours, _ = cv2.findContours(erodeimg, cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE) 
         
         
-        data = cv2.imread(filename,0)
+        data = cv2.imread(dataFile,0)
 
         if data is None:
             params["DA"]="NONE"
@@ -98,6 +98,8 @@ wordtokens= ["word/pneuma.png"]
 wordtokens= ["word/kyrios.png"]
 wordtokens= ["word/xristou.png","word/patera.png"]
 wordtokens= ["word/Ihsou.png","word/paulos.png","word/ypostateos.png","word/theos.png","word/oti.png","word/gar.png"]
+wordtokens= ['word/pantokrator.png','word/apavgazmatos.png','word/monogeni.png','word/agenitos.png']
+
 for queryFile in wordtokens:
     print(queryFile)
     
