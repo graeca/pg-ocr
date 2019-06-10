@@ -28,4 +28,11 @@ apt-get install -y libsm6 libxext6 libxrender-dev
 git add .
 git commit -m "update"
 git push https://github.com/graeca/pg-ocr.git master
+git clone https://github.com/graeca/pg-ocr.git
 #nohup jupyter-lab --allow-root --notebook-dir=pg-ocr/ &
+
+
+#conda install -c conda-forge r=3.4.1
+conda install -c r r=4.3
+install.packages("dtw")
+sudo apt-get install -y libxt-dev
