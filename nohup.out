@@ -766,3 +766,5 @@ Examples
     jupyter lab --app-dir=~/myjupyterlabapp # start JupyterLab with a particular set of extensions
     jupyter lab --certfile=mycert.pem # use SSL/TLS certificate
 
+[TerminalIPythonApp] WARNING | File not found: 'sea.py'
+]0;IPython: root/pg-ocr
