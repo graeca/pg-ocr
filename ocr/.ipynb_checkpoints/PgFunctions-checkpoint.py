@@ -239,7 +239,7 @@ def applyWordSegmentation(img,folder):
             ###crop_img = img[y-10:y+h+5, x:x+w]
             #yxxx=0
             #cv2.imwrite('test/'+ folder +'/'+str(i)+'test.png',crop_img)
-        crop_imgOr = img[y-10:y+h1, x:x+w1]
+        crop_imgOr = img[y-20:y+h1, x:x+w1]
         
         crop_img=crop_imgOr.copy()
         
