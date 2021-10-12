@@ -1,5 +1,5 @@
 matplotlib
-opencv-contrib-python==3.4.5.20
+opencv-contrib-python==4.2.0.32
 scipy
 dtw
 fastdtw
